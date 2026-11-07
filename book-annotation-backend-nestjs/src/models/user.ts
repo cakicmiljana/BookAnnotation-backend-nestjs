@@ -1,11 +1,31 @@
-export interface User {
-    id: number;
-    username: string;
-    email: string;
-    password: string;
-    passwordHash: string;
-    bio?: string;
-    avatarUrl?: string;
-    createdAt: Date;
-    deletedAt?: Date;
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+@Entity('users')
+@Index('UQ_users_username_lower', { synchronize: false })
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ type: 'varchar', length: 30 })
+  username: string;
+
+  @Index('UQ_users_email', { unique: true })
+  @Column({ type: 'varchar', length: 254 })
+  email: string;
+
+  @Column({ type: 'varchar' })
+  passwordHash: string;
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt: Date;
 }
