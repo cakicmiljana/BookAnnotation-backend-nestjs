@@ -1,7 +1,7 @@
 export enum AnnotationTag {
+  Quote = 'quote',
   Important = 'important',
   Analysis = 'analysis',
-  Quote = 'quote',
   Definition = 'definition',
   Question = 'question',
   Symbolism = 'symbolism',

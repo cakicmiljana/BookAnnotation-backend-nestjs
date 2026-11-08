@@ -1,12 +1,6 @@
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn, UpdateDateColumn,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { SourceFormat } from './enums/source-format.enum';
 import { User } from './user';
@@ -17,6 +11,15 @@ export class Edition {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
+  deletedAt: Date | null;
+  
   @Column({ type: 'int' })
   workId: number;
 
@@ -49,18 +52,9 @@ export class Edition {
   coverUrl: string | null;
 
   @Column({ type: 'int', nullable: true })
-  uploadedById: number | null;
+  uploadedByUserId: number | null;
 
   @ManyToOne(() => User, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn()
-  uploadedBy: User | null;
-
-  @CreateDateColumn({ type: 'timestamptz' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamptz' })
-  updatedAt: Date;
-
-  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
-  deletedAt: Date | null;
+  uploadedByUser: User | null;
 }

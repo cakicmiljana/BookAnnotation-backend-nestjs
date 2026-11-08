@@ -1,10 +1,6 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 import { Edition } from './edition';
