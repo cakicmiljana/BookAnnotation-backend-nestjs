@@ -1,17 +1,16 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Index,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
+import { Column, Entity, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('works')
-@Index('IDX_works_title_author_lower', { synchronize: false })
 export class Work {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt: Date;
 
   @Column({ type: 'varchar', length: 300 })
   title: string;
@@ -30,10 +29,4 @@ export class Work {
 
   @Column({ type: 'int', nullable: true })
   publicationYear: number | null;
-
-  @CreateDateColumn({ type: 'timestamptz' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamptz' })
-  updatedAt: Date;
 }

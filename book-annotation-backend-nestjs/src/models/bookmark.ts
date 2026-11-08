@@ -1,7 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
+import { Column, Entity, CreateDateColumn,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,

@@ -1,9 +1,5 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryColumn,
+import { Column, Entity, PrimaryColumn,
+  JoinColumn, OneToOne,
   UpdateDateColumn,
 } from 'typeorm';
 import { numericTransformer } from '../database/transformers/numeric.transformer';
@@ -22,9 +18,7 @@ export class ReadingPreferences {
   user: User;
 
   @Column({
-    type: 'enum',
-    enum: FontFamily,
-    enumName: 'font_family',
+    type: 'enum', enum: FontFamily, enumName: 'font_family',
     default: FontFamily.Serif,
   })
   fontFamily: FontFamily;
@@ -42,17 +36,13 @@ export class ReadingPreferences {
   lineHeight: number;
 
   @Column({
-    type: 'enum',
-    enum: ReadingWidth,
-    enumName: 'reading_width',
+    type: 'enum', enum: ReadingWidth, enumName: 'reading_width',
     default: ReadingWidth.Comfortable,
   })
   readingWidth: ReadingWidth;
 
   @Column({
-    type: 'enum',
-    enum: Theme,
-    enumName: 'reading_theme',
+    type: 'enum', enum: Theme, enumName: 'reading_theme',
     default: Theme.Paper,
   })
   theme: Theme;

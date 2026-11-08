@@ -1,12 +1,7 @@
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
+import { Column,Entity, CreateDateColumn, PrimaryGeneratedColumn, DeleteDateColumn,
   Index,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Edition } from './edition';
@@ -15,7 +10,7 @@ import { AnnotationTag } from './enums/annotation-tag.enum';
 import { User } from './user';
 
 @Entity('annotations')
-@Index('IDX_annotations_user_edition', ['userId', 'editionId'])
+//@Index('IDX_annotations_user_edition', ['userId', 'editionId'])
 export class Annotation {
   @PrimaryGeneratedColumn()
   id: number;
@@ -43,11 +38,7 @@ export class Annotation {
   @Column({ type: 'text', default: '' })
   comment: string;
 
-  @Column({
-    type: 'enum',
-    enum: AnnotationTag,
-    enumName: 'annotation_tag',
-    nullable: true,
+  @Column({ type: 'enum', enum: AnnotationTag, enumName: 'annotation_tag', nullable: true,
   })
   tag: AnnotationTag | null;
 
