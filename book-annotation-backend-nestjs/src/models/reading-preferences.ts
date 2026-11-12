@@ -30,7 +30,8 @@ export class ReadingPreferences {
     type: 'numeric',
     precision: 3,
     scale: 2,
-    default: 1.85,
+    // A raw SQL default: a plain 1.85 makes every migration:generate report a false change.
+    default: () => '1.85',
     transformer: numericTransformer,
   })
   lineHeight: number;
