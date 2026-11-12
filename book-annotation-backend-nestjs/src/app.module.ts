@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { databaseConfig } from './config/database.config';
+import { validateEnvironment } from './config/env.validation';
 import { AnalysisModule } from './modules/analysis/analysis.module';
 import { AnnotationsModule } from './modules/annotations/annotations.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -16,6 +20,11 @@ import { WorksModule } from './modules/works/works.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true, validate: validateEnvironment }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: databaseConfig,
+    }),
     AuthModule,
     UsersModule,
     PreferencesModule,
