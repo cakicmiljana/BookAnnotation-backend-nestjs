@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EditionsController } from './editions.controller';
+import { EditionUploadService } from './edition-upload.service';
 import { EditionsService } from './editions.service';
 
 describe('EditionsController', () => {
@@ -8,7 +9,7 @@ describe('EditionsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [EditionsController],
-      providers: [EditionsService],
+      providers: [EditionsService, EditionUploadService],
     }).compile();
 
     controller = module.get<EditionsController>(EditionsController);

@@ -12,7 +12,6 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
-import { notImplemented } from '../../common/utils/not-implemented';
 import { LibraryItemResponse } from '../../dtos/library/library-item.response';
 import { UpdateReadingPositionDto } from '../../dtos/library/update-reading-position.dto';
 import { LibraryService } from './library.service';
@@ -28,8 +27,7 @@ export class LibraryController {
   findAll(
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<LibraryItemResponse[]> {
-    // return this.libraryService.findAll(user.id);
-    return notImplemented(user);
+    return this.libraryService.findAll(user.id);
   }
 
   @Put(':editionId')
@@ -37,8 +35,7 @@ export class LibraryController {
     @CurrentUser() user: AuthenticatedUser,
     @Param('editionId', ParseIntPipe) editionId: number,
   ): Promise<LibraryItemResponse> {
-    // return this.libraryService.add(user.id, editionId);
-    return notImplemented(user, editionId);
+    return this.libraryService.add(user.id, editionId);
   }
 
   /** Removes the entry only; annotations and notes stay. */
@@ -48,8 +45,7 @@ export class LibraryController {
     @CurrentUser() user: AuthenticatedUser,
     @Param('editionId', ParseIntPipe) editionId: number,
   ): Promise<void> {
-    // return this.libraryService.remove(user.id, editionId);
-    return notImplemented(user, editionId);
+    return this.libraryService.remove(user.id, editionId);
   }
 
   @Put(':editionId/position')
@@ -58,7 +54,6 @@ export class LibraryController {
     @Param('editionId', ParseIntPipe) editionId: number,
     @Body() dto: UpdateReadingPositionDto,
   ): Promise<LibraryItemResponse> {
-    // return this.libraryService.updatePosition(user.id, editionId, dto.offset);
-    return notImplemented(user, editionId, dto);
+    return this.libraryService.updatePosition(user.id, editionId, dto.offset);
   }
 }

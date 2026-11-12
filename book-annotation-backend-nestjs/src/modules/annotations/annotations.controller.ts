@@ -14,7 +14,6 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
-import { notImplemented } from '../../common/utils/not-implemented';
 import { AnnotationQueryDto } from '../../dtos/annotations/annotation-query.dto';
 import { AnnotationResponse } from '../../dtos/annotations/annotation.response';
 import { CreateAnnotationDto } from '../../dtos/annotations/create-annotation.dto';
@@ -35,8 +34,7 @@ export class AnnotationsController {
     @Param('editionId', ParseIntPipe) editionId: number,
     @Query() query: AnnotationQueryDto,
   ): Promise<AnnotationResponse[]> {
-    // return this.annotationsService.findForEdition(user.id, editionId, query);
-    return notImplemented(user, editionId, query);
+    return this.annotationsService.findForEdition(user.id, editionId, query);
   }
 
   @Post('editions/:editionId/annotations')
@@ -45,8 +43,7 @@ export class AnnotationsController {
     @Param('editionId', ParseIntPipe) editionId: number,
     @Body() dto: CreateAnnotationDto,
   ): Promise<AnnotationResponse> {
-    // return this.annotationsService.create(user.id, editionId, dto);
-    return notImplemented(user, editionId, dto);
+    return this.annotationsService.create(user.id, editionId, dto);
   }
 
   @Patch('annotations/:id')
@@ -55,8 +52,7 @@ export class AnnotationsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateAnnotationDto,
   ): Promise<AnnotationResponse> {
-    // return this.annotationsService.update(user.id, id, dto);
-    return notImplemented(user, id, dto);
+    return this.annotationsService.update(user.id, id, dto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -65,8 +61,7 @@ export class AnnotationsController {
     @CurrentUser() user: AuthenticatedUser,
     @Param('id', ParseIntPipe) id: number,
   ): Promise<void> {
-    // return this.annotationsService.remove(user.id, id);
-    return notImplemented(user, id);
+    return this.annotationsService.remove(user.id, id);
   }
 
   /** Notebook: annotations across all editions, ordered by edition title, then startOffset. */
@@ -75,7 +70,6 @@ export class AnnotationsController {
     @CurrentUser() user: AuthenticatedUser,
     @Query() query: NotebookAnnotationQueryDto,
   ): Promise<NotebookAnnotationResponse[]> {
-    // return this.annotationsService.findForNotebook(user.id, query);
-    return notImplemented(user, query);
+    return this.annotationsService.findForNotebook(user.id, query);
   }
 }

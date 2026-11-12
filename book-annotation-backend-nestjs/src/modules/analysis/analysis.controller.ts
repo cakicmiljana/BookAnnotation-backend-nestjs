@@ -2,7 +2,6 @@ import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
-import { notImplemented } from '../../common/utils/not-implemented';
 import { AnalyzePassageDto } from '../../dtos/analysis/analyze-passage.dto';
 import { FollowUpDto } from '../../dtos/analysis/follow-up.dto';
 import { FollowUpResponse } from '../../dtos/analysis/follow-up.response';
@@ -22,8 +21,7 @@ export class AnalysisController {
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: AnalyzePassageDto,
   ): Promise<PassageAnalysisResponse> {
-    // return this.analysisService.analyze(user.id, dto);
-    return notImplemented(user, dto);
+    return this.analysisService.analyze(user.id, dto);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -32,7 +30,6 @@ export class AnalysisController {
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: FollowUpDto,
   ): Promise<FollowUpResponse> {
-    // return this.analysisService.followUp(user.id, dto);
-    return notImplemented(user, dto);
+    return this.analysisService.followUp(user.id, dto);
   }
 }
