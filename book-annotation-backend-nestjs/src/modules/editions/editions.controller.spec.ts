@@ -9,7 +9,10 @@ describe('EditionsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [EditionsController],
-      providers: [EditionsService, EditionUploadService],
+      providers: [
+        { provide: EditionsService, useValue: {} },
+        { provide: EditionUploadService, useValue: {} },
+      ],
     }).compile();
 
     controller = module.get<EditionsController>(EditionsController);
