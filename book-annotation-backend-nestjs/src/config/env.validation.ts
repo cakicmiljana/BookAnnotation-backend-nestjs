@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Length,
   Max,
   Min,
   validateSync,
@@ -35,6 +36,12 @@ export class EnvironmentVariables {
   @IsString()
   @IsNotEmpty()
   DATABASE_NAME: string;
+
+  /** Password for the seeded user; read only by `npm run seed`. */
+  @IsOptional()
+  @IsString()
+  @Length(8, 72)
+  SEED_USER_PASSWORD?: string;
 }
 
 /** Runs once at startup; the app refuses to start with an invalid environment. */
