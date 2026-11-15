@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUrl,
   Length,
   Max,
   Min,
@@ -16,6 +17,10 @@ export class EnvironmentVariables {
   @Min(1)
   @Max(65535)
   PORT: number = 3000;
+
+  /** The frontend's origin, e.g. http://localhost:4200 */
+  @IsUrl({ require_tld: false, require_protocol: true })
+  CORS_ORIGIN: string;
 
   @IsString()
   @IsNotEmpty()

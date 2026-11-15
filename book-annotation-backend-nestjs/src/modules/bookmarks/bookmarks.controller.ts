@@ -10,7 +10,12 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import type { Response } from 'express';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
@@ -33,6 +38,10 @@ export class BookmarksController {
   }
 
   /** Idempotent: 201 for a new bookmark, 200 with the existing one for a duplicate offset. */
+  @ApiCreatedResponse({
+    type: BookmarkResponse,
+    description: 'Bookmark created',
+  })
   @ApiOkResponse({
     type: BookmarkResponse,
     description: 'Bookmark already existed',

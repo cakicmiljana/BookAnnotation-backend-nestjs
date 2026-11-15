@@ -8,7 +8,6 @@ import { FollowUpResponse } from '../../dtos/analysis/follow-up.response';
 import { PassageAnalysisResponse } from '../../dtos/analysis/passage-analysis.response';
 import { AnalysisService } from './analysis.service';
 
-// TODO: @Throttle (about 10 requests per minute per user)
 @ApiTags('analysis')
 @ApiBearerAuth()
 @Controller('analysis')

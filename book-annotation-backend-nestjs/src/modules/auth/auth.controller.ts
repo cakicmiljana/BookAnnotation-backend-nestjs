@@ -25,7 +25,7 @@ export class AuthController {
     private readonly usersService: UsersService,
   ) {}
 
-  // TODO: @UseGuards(LocalAuthGuard) and @Throttle (5 per minute per IP)
+  // TODO: @UseGuards(LocalAuthGuard)
   @Public()
   @HttpCode(HttpStatus.OK)
   @ApiBody({ type: LoginDto })
@@ -34,7 +34,6 @@ export class AuthController {
     return this.authService.issueToken(user);
   }
 
-  // TODO: @Throttle
   @Public()
   @Post('register')
   register(@Body() dto: RegisterDto): Promise<LoginResponse> {

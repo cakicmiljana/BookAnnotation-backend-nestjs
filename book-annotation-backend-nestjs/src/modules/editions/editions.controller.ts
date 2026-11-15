@@ -53,7 +53,7 @@ export class EditionsController {
     return this.editionsService.getContent(user.id, id);
   }
 
-  // TODO: @Throttle; FileInterceptor limits.fileSize from UPLOAD_MAX_BYTES (413)
+  // TODO: FileInterceptor limits.fileSize from UPLOAD_MAX_BYTES (413)
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
