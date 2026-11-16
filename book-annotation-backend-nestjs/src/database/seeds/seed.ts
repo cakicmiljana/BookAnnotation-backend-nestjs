@@ -1,8 +1,8 @@
-import * as bcrypt from 'bcrypt';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { EntityManager, IsNull } from 'typeorm';
 import { normalizeText } from '../../common/utils/normalize-text';
+import { hashPassword } from '../../common/utils/password';
 import { Annotation } from '../../models/annotation';
 import { Bookmark } from '../../models/bookmark';
 import { Edition } from '../../models/edition';
@@ -25,7 +25,6 @@ import {
   SeedWork,
 } from './seed-data';
 
-const BCRYPT_COST = 10;
 const TEXTS_DIRECTORY = join(__dirname, 'texts');
 
 /** A stored edition together with its content, which is not selected by default. */
@@ -60,7 +59,7 @@ async function upsertUser(
   password: string,
 ): Promise<User> {
   const users = manager.getRepository(User);
-  const passwordHash = await bcrypt.hash(password, BCRYPT_COST);
+  const passwordHash = await hashPassword(password);
   const existing = await users.findOneBy({ email: SEED_USER.email });
   if (existing) {
     existing.passwordHash = passwordHash;
