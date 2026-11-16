@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { databaseConfig } from './config/database.config';
 import { validateEnvironment } from './config/env.validation';
 import { AnalysisModule } from './modules/analysis/analysis.module';
@@ -39,6 +41,10 @@ import { WorksModule } from './modules/works/works.module';
     HealthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // Every route needs a valid token unless it is marked with @Public().
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+  ],
 })
 export class AppModule {}

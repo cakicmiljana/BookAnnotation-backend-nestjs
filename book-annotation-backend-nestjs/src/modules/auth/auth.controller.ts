@@ -5,10 +5,12 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
+import { LocalAuthGuard } from '../../common/guards/local-auth.guard';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
 import { LoginDto } from '../../dtos/auth/login.dto';
 import { LoginResponse } from '../../dtos/auth/login.response';
@@ -25,8 +27,8 @@ export class AuthController {
     private readonly usersService: UsersService,
   ) {}
 
-  // TODO: @UseGuards(LocalAuthGuard)
   @Public()
+  @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @ApiBody({ type: LoginDto })
   @Post('login')
