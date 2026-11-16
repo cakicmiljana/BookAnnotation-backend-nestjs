@@ -6,8 +6,10 @@ import {
   IsString,
   IsUrl,
   Length,
+  Matches,
   Max,
   Min,
+  MinLength,
   validateSync,
 } from 'class-validator';
 
@@ -21,6 +23,18 @@ export class EnvironmentVariables {
   /** The frontend's origin, e.g. http://localhost:4200 */
   @IsUrl({ require_tld: false, require_protocol: true })
   CORS_ORIGIN: string;
+
+  /** Signs login tokens; long and random, never committed. */
+  @IsString()
+  @MinLength(32)
+  JWT_SECRET: string;
+
+  /** Token lifetime: a number of seconds, or a number with a unit (30m, 12h, 1d, ...) */
+  @IsOptional()
+  @Matches(/^\d+(ms|s|m|h|d|w|y)?$/, {
+    message: 'JWT_EXPIRES_IN must look like 3600, 30m, 12h or 1d',
+  })
+  JWT_EXPIRES_IN: string = '1d';
 
   @IsString()
   @IsNotEmpty()
