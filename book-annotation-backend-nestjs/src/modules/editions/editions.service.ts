@@ -1,4 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { notImplemented } from '../../common/utils/not-implemented';
 import { EditionContentResponse } from '../../dtos/editions/edition-content.response';
 import { EditionQueryDto } from '../../dtos/editions/edition-query.dto';
@@ -7,7 +9,11 @@ import { Edition } from '../../models/edition';
 
 @Injectable()
 export class EditionsService {
-  /** The shared catalogue plus the user's own uploads. */
+  constructor(
+    @InjectRepository(Edition)
+    private readonly editionsRepository: Repository<Edition>,
+  ) {}
+
   findAllAccessible(
     userId: number,
     query: EditionQueryDto,
@@ -33,11 +39,28 @@ export class EditionsService {
     return notImplemented(userId, workId);
   }
 
-  /**
-   * The single place for the visibility rule: catalogue editions and the
-   * user's own uploads. Throws 404 otherwise. Used by other services.
-   */
-  findAccessibleOrFail(editionId: number, userId: number): Promise<Edition> {
-    return notImplemented(editionId, userId);
+  async findAccessibleEdition(
+    editionId: number,
+    userId: number,
+  ): Promise<Edition> {
+    const edition = await this.accessibleTo(userId)
+      .andWhere('edition.id = :editionId', { editionId })
+      .getOne();
+
+    if (!edition) {
+      throw new NotFoundException(`Edition ${editionId} was not found`);
+    }
+    return edition;
+  }
+
+  // shared catalogue (no uploader) + user's own uploads.
+  private accessibleTo(userId: number): SelectQueryBuilder<Edition> {
+    return this.editionsRepository
+      .createQueryBuilder('edition')
+      .innerJoinAndSelect('edition.work', 'work')
+      .where(
+        '(edition.uploadedByUserId IS NULL OR edition.uploadedByUserId = :userId)',
+        { userId },
+      );
   }
 }
