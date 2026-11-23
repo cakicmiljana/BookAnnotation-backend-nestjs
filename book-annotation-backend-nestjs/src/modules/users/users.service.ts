@@ -74,8 +74,7 @@ export class UsersService {
     await this.usersRepository.save(user);
   }
 
-  // currentPassword is optional for now because the UI does not ask for it.
-  // To make it required, throw here when it is undefined.
+  // To make password required, throw here when it is undefined.
   private async checkCurrentPassword(
     user: User,
     currentPassword: string | undefined,

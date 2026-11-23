@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { escapeLikePattern } from '../../common/utils/escape-like-pattern';
-import { notImplemented } from '../../common/utils/not-implemented';
 import { EditionContentResponse } from '../../dtos/editions/edition-content.response';
 import { EditionQueryDto } from '../../dtos/editions/edition-query.dto';
 import { EditionSort } from '../../dtos/editions/edition-sort.enum';
@@ -56,11 +55,29 @@ export class EditionsService {
     };
   }
 
-  findAccessibleByWork(
+  // The book details "Editions" tab. A work with no edition the user can see
+  // gives the same 404 as a missing work.
+  async findAccessibleByWork(
     userId: number,
     workId: number,
   ): Promise<EditionResponse[]> {
-    return notImplemented(userId, workId);
+    const editions = await this.accessibleToUser(userId)
+      .andWhere('edition.workId = :workId', { workId })
+      .orderBy('edition.language', 'ASC')
+      .addOrderBy('edition.id', 'ASC')
+      .getMany();
+
+    if (editions.length === 0) {
+      throw new NotFoundException(`Work ${workId} was not found`);
+    }
+    return editions.map((edition) => toEditionResponse(edition, userId));
+  }
+
+  // Used by WorksService for the work's editionCount.
+  countAccessibleByWork(userId: number, workId: number): Promise<number> {
+    return this.accessibleToUser(userId)
+      .andWhere('edition.workId = :workId', { workId })
+      .getCount();
   }
 
   async findAccessibleEdition(
