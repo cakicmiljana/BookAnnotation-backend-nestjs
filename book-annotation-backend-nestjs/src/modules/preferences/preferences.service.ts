@@ -46,25 +46,8 @@ export class PreferencesService {
       existing ??
       this.preferencesRepository.create({ userId, ...DEFAULT_PREFERENCES });
 
-    // Fields that were not sent are `undefined` on the DTO; they keep their value.
-    if (dto.fontFamily !== undefined) {
-      preferences.fontFamily = dto.fontFamily;
-    }
-    if (dto.fontSize !== undefined) {
-      preferences.fontSize = dto.fontSize;
-    }
-    if (dto.lineHeight !== undefined) {
-      preferences.lineHeight = dto.lineHeight;
-    }
-    if (dto.readingWidth !== undefined) {
-      preferences.readingWidth = dto.readingWidth;
-    }
-    if (dto.theme !== undefined) {
-      preferences.theme = dto.theme;
-    }
-    if (dto.showHighlights !== undefined) {
-      preferences.showHighlights = dto.showHighlights;
-    }
+    // The DTO contains only the fields that were sent, so only those change.
+    Object.assign(preferences, dto);
 
     const saved = await this.preferencesRepository.save(preferences);
     return toReadingPreferencesResponse(saved);
