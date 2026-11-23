@@ -21,7 +21,7 @@ interface Book {
 // copy stays invisible to everyone else; that user is deleted at the end.
 describe('Catalogue (e2e)', () => {
   let app: INestApplication<App>;
-  const otherUsername = `e2e_${Date.now()}`;
+  const otherUsername = `e2e_catalogue_${Date.now()}`;
 
   let miljanaToken: string;
   let otherToken: string;
