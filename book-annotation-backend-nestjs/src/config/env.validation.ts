@@ -56,6 +56,12 @@ export class EnvironmentVariables {
   @IsNotEmpty()
   DATABASE_NAME: string;
 
+  /** Largest file accepted by POST /api/editions, in bytes (default 10 MB) */
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  UPLOAD_MAX_BYTES: number = 10485760;
+
   /** Password for the seeded user; read only by `npm run seed`. */
   @IsOptional()
   @IsString()

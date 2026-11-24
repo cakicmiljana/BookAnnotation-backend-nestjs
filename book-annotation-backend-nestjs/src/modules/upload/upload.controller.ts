@@ -21,7 +21,6 @@ import { EditionUploadService } from './edition-upload.service';
 export class UploadController {
   constructor(private readonly editionUploadService: EditionUploadService) {}
 
-  // TODO: FileInterceptor limits.fileSize from UPLOAD_MAX_BYTES (413)
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
@@ -44,7 +43,7 @@ export class UploadController {
   })
   upload(
     @CurrentUser() user: AuthenticatedUser,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File | undefined,
     @Body() dto: UploadEditionDto,
   ): Promise<EditionResponse> {
     return this.editionUploadService.upload(user.id, file, dto);
