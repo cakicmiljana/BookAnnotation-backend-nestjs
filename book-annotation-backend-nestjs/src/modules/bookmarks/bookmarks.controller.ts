@@ -8,15 +8,8 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  Res,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiTags,
-} from '@nestjs/swagger';
-import type { Response } from 'express';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
 import { BookmarkResponse } from '../../dtos/bookmarks/bookmark.response';
@@ -37,29 +30,14 @@ export class BookmarksController {
     return this.bookmarksService.findForEdition(user.id, editionId);
   }
 
-  /** Idempotent: 201 for a new bookmark, 200 with the existing one for a duplicate offset. */
-  @ApiCreatedResponse({
-    type: BookmarkResponse,
-    description: 'Bookmark created',
-  })
-  @ApiOkResponse({
-    type: BookmarkResponse,
-    description: 'Bookmark already existed',
-  })
+  /** Idempotent: always 201; a duplicate offset returns the existing bookmark. */
   @Post('editions/:editionId/bookmarks')
-  async create(
+  create(
     @CurrentUser() user: AuthenticatedUser,
     @Param('editionId', ParseIntPipe) editionId: number,
     @Body() dto: CreateBookmarkDto,
-    @Res({ passthrough: true }) response: Response,
   ): Promise<BookmarkResponse> {
-    const { bookmark, created } = await this.bookmarksService.create(
-      user.id,
-      editionId,
-      dto,
-    );
-    response.status(created ? HttpStatus.CREATED : HttpStatus.OK);
-    return bookmark;
+    return this.bookmarksService.create(user.id, editionId, dto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
