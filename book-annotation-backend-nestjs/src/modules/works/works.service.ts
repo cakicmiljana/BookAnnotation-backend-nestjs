@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { WorkResponse } from '../../dtos/works/work.response';
 import { toWorkResponse } from '../../mappers/work.mapper';
 import { Work } from '../../models/work';
@@ -32,4 +32,42 @@ export class WorksService {
 
     return toWorkResponse(work, editionCount);
   }
+
+  /**
+   * Finds a work by title + author (ignoring letter case), or creates it.
+   * Takes the upload's transaction manager, so a new work is rolled back if the upload fails.
+   */
+  async findOrCreate(
+    manager: EntityManager,
+    details: NewWorkDetails,
+  ): Promise<Work> {
+    const existingWork = await manager
+      .createQueryBuilder(Work, 'work')
+      .where('LOWER(work.title) = LOWER(:title)', { title: details.title })
+      .andWhere('LOWER(work.author) = LOWER(:author)', {
+        author: details.author,
+      })
+      .orderBy('work.id', 'ASC')
+      .getOne();
+    if (existingWork) {
+      return existingWork;
+    }
+
+    const newWork = manager.create(Work, {
+      title: details.title,
+      author: details.author,
+      description: details.description ?? null,
+      country: details.country ?? null,
+      publicationYear: details.publicationYear ?? null,
+    });
+    return manager.save(newWork);
+  }
+}
+
+export interface NewWorkDetails {
+  title: string;
+  author: string;
+  description?: string;
+  country?: string;
+  publicationYear?: number;
 }
