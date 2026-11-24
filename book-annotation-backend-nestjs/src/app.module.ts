@@ -17,6 +17,7 @@ import { LibraryModule } from './modules/library/library.module';
 import { NotesModule } from './modules/notes/notes.module';
 import { PreferencesModule } from './modules/preferences/preferences.module';
 import { SearchModule } from './modules/search/search.module';
+import { UploadModule } from './modules/upload/upload.module';
 import { UsersModule } from './modules/users/users.module';
 import { WorksModule } from './modules/works/works.module';
 
@@ -32,6 +33,7 @@ import { WorksModule } from './modules/works/works.module';
     PreferencesModule,
     WorksModule,
     EditionsModule,
+    UploadModule,
     LibraryModule,
     AnnotationsModule,
     NotesModule,
