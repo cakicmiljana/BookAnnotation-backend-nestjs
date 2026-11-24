@@ -42,7 +42,7 @@ export class NotesController {
     @Param('editionId', ParseIntPipe) editionId: number,
     @Res({ passthrough: true }) response: Response,
   ): Promise<NoteResponse | undefined> {
-    const note = await this.notesService.findOne(user.id, editionId);
+    const note = await this.notesService.findNote(user.id, editionId);
     if (!note) {
       response.status(HttpStatus.NO_CONTENT);
       return undefined;
