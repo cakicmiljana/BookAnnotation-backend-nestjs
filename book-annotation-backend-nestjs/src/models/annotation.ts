@@ -10,7 +10,7 @@ import { AnnotationTag } from './enums/annotation-tag.enum';
 import { User } from './user';
 
 @Entity('annotations')
-//@Index('IDX_annotations_user_edition', ['userId', 'editionId'])
+@Index('IDX_annotations_user_edition', ['userId', 'editionId'])
 export class Annotation {
   @PrimaryGeneratedColumn()
   id: number;

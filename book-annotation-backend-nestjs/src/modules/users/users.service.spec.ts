@@ -134,7 +134,7 @@ describe('UsersService', () => {
 
       await expect(
         service.updateProfile(1, { username: 'nikola' }),
-      ).rejects.toThrow(new ConflictException(USERNAME_TAKEN));
+      ).rejects.toThrow(new ConflictException('Username is already taken'));
       expect(usersRepository.save).not.toHaveBeenCalled();
     });
 

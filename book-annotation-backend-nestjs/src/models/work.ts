@@ -1,7 +1,9 @@
-import { Column, Entity, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn,
+import { Column, Entity, CreateDateColumn, Index, PrimaryGeneratedColumn, UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('works')
+// Expression index on (lower(title), lower(author)); created in a migration, used by upload matching.
+@Index('IDX_works_title_author_lower', { synchronize: false })
 export class Work {
   @PrimaryGeneratedColumn()
   id: number;
