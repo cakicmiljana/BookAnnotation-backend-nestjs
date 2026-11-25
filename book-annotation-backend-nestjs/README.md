@@ -1,98 +1,188 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Book Annotation App — backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+REST API for a private reading room. A user reads books from a shared catalogue or
+uploads their own (PDF or plain text), keeps a personal library, highlights passages
+with annotations, writes one note per book, sets bookmarks and keeps reading
+preferences. Everything a user creates is private to them.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Built with NestJS 11 (Express), TypeORM and PostgreSQL 16, with JWT authentication.
 
-## Description
+## Requirements
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Node.js 24 and npm
+- Docker Desktop (for PostgreSQL)
 
-## Project setup
+## Setup
+
+### 1. Start the database
+
+The PostgreSQL container is defined in `../../docker-compose.yml` (container
+`postgres-dev`, user `rwaapp`, password `rwaapp`, database `test`, port 5432):
 
 ```bash
-$ npm install
+docker compose -f ../../docker-compose.yml up -d postgres
 ```
 
-## Compile and run the project
+### 2. Configure the environment
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+cp .env.example .env
 ```
 
-## Run tests
+Then set `JWT_SECRET` in `.env` to a long random value (at least 32 characters).
+`.env` is git-ignored; never commit it.
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `PORT` | `3000` | HTTP port |
+| `CORS_ORIGIN` | — | The frontend's origin, e.g. `http://localhost:4200` |
+| `JWT_SECRET` | — | Signs login tokens; at least 32 characters |
+| `JWT_EXPIRES_IN` | `1d` | Token lifetime (`3600`, `30m`, `12h`, `1d`, ...) |
+| `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_NAME` | — | PostgreSQL connection |
+| `UPLOAD_MAX_BYTES` | `10485760` | Largest accepted upload (10 MB) |
+| `SEED_USER_PASSWORD` | — | Password of the seeded user; only used by `npm run seed` |
+
+The app checks these values at startup and refuses to start if one is missing or invalid.
+
+### 3. Install, migrate, seed
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
+npm run migration:run
+npm run seed
 ```
 
-## Deployment
+The seed creates three catalogue books (public-domain excerpts from Project Gutenberg,
+see `src/database/seeds/texts/README.md`) and one user, **`miljana`**, whose password
+is `SEED_USER_PASSWORD`. The user gets a private uploaded copy of one book, library
+entries, annotations, notes, bookmarks and preferences. Running the seed again resets
+that user's data to the same state.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 4. Run
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run start:dev    # development, restarts on changes
+npm run build && npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+The API is served under `http://localhost:3000/api`.
 
-## Resources
+**Swagger UI:** <http://localhost:3000/api/docs>. Log in with `POST /api/auth/login`,
+then paste the `token` into **Authorize**.
 
-Check out a few resources that may come in handy when working with NestJS:
+## Tests
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npm test             # unit tests
+npm run test:e2e     # end-to-end tests
+```
 
-## Support
+The end-to-end tests run against the real database, so it must be running, migrated
+and seeded. They create temporary users and delete them (and everything they created)
+at the end.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Tests cover the business rules: authentication, visibility of uploaded editions,
+annotation offsets, the one-note-per-edition rule, the Notebook endpoints and the upload
+rules (wrong type, too large, no readable text, work matching, transaction rollback).
 
-## Stay in touch
+## Migrations
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+npm run migration:generate -- src/database/migrations/<Name>   # from entity changes
+npm run migration:run
+npm run migration:revert
+npm run migration:show
+```
 
-## License
+The schema is changed only through migrations (`synchronize` is off). Tables and
+columns use `snake_case`; TypeScript uses camelCase.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Project structure
+
+```
+src/
+  common/      decorators, guards, shared types and small helpers
+  config/      environment validation, database and JWT config
+  database/    data source (CLI), naming strategy, migrations, seed
+  dtos/        request and response classes (the API contract)
+  mappers/     entity → response DTO
+  models/      TypeORM entities and enums
+  modules/     one folder per feature: controller, service, module
+    auth  users  preferences  works  editions  upload
+    library  annotations  notes  bookmarks  health
+```
+
+## API overview
+
+All routes start with `/api` and need `Authorization: Bearer <token>`, except
+`POST /auth/register`, `POST /auth/login`, `GET /health` and `GET /`.
+
+| Area | Routes |
+| --- | --- |
+| Auth | `POST /auth/register`, `POST /auth/login`, `GET /auth/me` |
+| Profile | `GET/PATCH /me`, `PUT /me/password`, `GET/PUT /me/preferences` |
+| Catalogue | `GET /editions`, `GET /editions/:id`, `GET /editions/:id/content`, `POST /editions` (upload), `GET /works/:workId`, `GET /works/:workId/editions` |
+| Library | `GET /me/library`, `PUT/DELETE /me/library/:editionId`, `PUT /me/library/:editionId/position` |
+| Annotations | `GET/POST /editions/:editionId/annotations`, `PATCH/DELETE /annotations/:id`, `GET /me/annotations` |
+| Notes | `GET/PUT/DELETE /editions/:editionId/note`, `GET /me/notes` |
+| Bookmarks | `GET/POST /editions/:editionId/bookmarks`, `DELETE /bookmarks/:id` |
+| Health | `GET /health` |
+
+See Swagger for request and response shapes.
+
+## Decisions
+
+Places where this backend differs from the implementation spec, or where the spec left
+a choice open:
+
+- **Search and AI analysis are not part of this version.** Exact search, semantic
+  search and the analysis endpoints (`GET /editions/:id/search`, `POST /analysis`,
+  `POST /analysis/follow-up`) are left for a later version.
+- **No rate limiting.** Login, register and upload are not throttled.
+- **Feature folders.** Code is grouped by feature (`src/modules/<feature>/`), not by
+  layer (`controllers/`, `services/`). DTOs, mappers and models stay in shared folders.
+- **Separate `UploadModule`.** `POST /editions` lives in its own module because uploading
+  needs both `WorksService` and `EditionsService`, and `WorksModule` already depends on
+  `EditionsModule`. This avoids a circular dependency.
+- **Text extractors are injected as classes.** `EditionUploadService` gets
+  `PlainTextExtractor` and `PdfTextExtractor` directly instead of through a
+  `TEXT_EXTRACTOR` token. Both implement the `TextExtractor` interface, and tests can
+  still replace them.
+- **`POST /editions/:editionId/bookmarks` always returns `201`.** A bookmark at an
+  offset that already has one returns the existing bookmark instead of a duplicate.
+- **`GET /api` stays** as a public "Hello World" route next to `GET /api/health`.
+- **Users keep a `deletedAt` column** (soft delete), although account deletion is not
+  offered yet.
+- **Seed data is defined in code** (`src/database/seeds/seed-data.ts`) with real book
+  texts, instead of being read from the frontend's `mock-data.json`.
+- **Messages are written inline** in services and guards instead of as named constants.
+- **Pinned package versions.** `@nestjs/config` 4.x and `@nestjs/typeorm` 11.x are used
+  because the 12.x versions are ESM-only and do not load in Jest. `pdf-parse` is pinned
+  to 2.4.5.
+- **Uploads:** a file must have the right extension, MIME type and (for PDF) the
+  `%PDF-` first bytes, otherwise `415`. Text shorter than 100 characters after
+  normalization is rejected with `400 "The file contains no readable text"`. A work is
+  matched by title + author ignoring letter case; this is not protected by a unique
+  index, so two simultaneous uploads of the same new book could create two works.
+
+## Frontend changes this backend assumes
+
+These are not implemented here; the frontend must make them:
+
+- `environment.api` is `http://localhost:300` (a typo). It must become
+  `http://localhost:3000/api`.
+- Add an HTTP interceptor that sends `Authorization: Bearer <token>`, and persist the
+  token (for example in `localStorage`) so a page refresh does not log the user out.
+- The `Book` model loses `content` and `deletedAt` and gains `workId`, `isbn`,
+  `contentLength`, `coverUrl` and `uploadedByMe`. The reader loads text from
+  `/editions/:id/content`.
+- `bookId` → `editionId` in the `Annotation` and `Note` models. `Annotation` gains
+  `updatedAt` and loses `deletedAt`.
+- The `User` model drops `passwordHash` and `deletedAt` and becomes
+  `{ id, username, email, createdAt }`.
+- Read error messages from `HttpErrorResponse.error.message`.
+- The note effects currently listen to their own `*Success` actions (an infinite loop).
+  They must listen to `createNote` / `updateNote` / `deleteNote`; create and update can
+  merge into a single upsert action. `deleteAnnotation` has no effect yet.
+- Requests never include `userId`; the server takes the user from the token.
+- The reader's search and AI analysis panels have no backend in this version.

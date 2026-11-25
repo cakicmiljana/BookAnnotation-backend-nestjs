@@ -34,7 +34,7 @@ function setUpSwagger(app: INestApplication): void {
   const config = new DocumentBuilder()
     .setTitle('Book Annotation API')
     .setDescription(
-      'Private close-reading and annotation app: catalogue, library, annotations, notes, bookmarks, search and AI analysis.',
+      'Private close-reading and annotation app: catalogue, library, annotations, notes, bookmarks and uploads.',
     )
     .setVersion('1.0')
     .addBearerAuth()

@@ -7,7 +7,6 @@ import { AppService } from './app.service';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { databaseConfig } from './config/database.config';
 import { validateEnvironment } from './config/env.validation';
-import { AnalysisModule } from './modules/analysis/analysis.module';
 import { AnnotationsModule } from './modules/annotations/annotations.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BookmarksModule } from './modules/bookmarks/bookmarks.module';
@@ -16,7 +15,6 @@ import { HealthModule } from './modules/health/health.module';
 import { LibraryModule } from './modules/library/library.module';
 import { NotesModule } from './modules/notes/notes.module';
 import { PreferencesModule } from './modules/preferences/preferences.module';
-import { SearchModule } from './modules/search/search.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { UsersModule } from './modules/users/users.module';
 import { WorksModule } from './modules/works/works.module';
@@ -38,8 +36,6 @@ import { WorksModule } from './modules/works/works.module';
     AnnotationsModule,
     NotesModule,
     BookmarksModule,
-    SearchModule,
-    AnalysisModule,
     HealthModule,
   ],
   controllers: [AppController],
