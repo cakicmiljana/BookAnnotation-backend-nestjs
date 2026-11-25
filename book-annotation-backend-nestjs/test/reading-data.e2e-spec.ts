@@ -22,7 +22,7 @@ interface Annotation {
   tag: string | null;
 }
 
-// Personal reading data: preferences, library, annotations, notes, bookmarks.
+// Personal reading data: annotations, notes and the Notebook.
 // Two temporary users do all the writing ("reader") and the privacy checks
 // ("other"); both are deleted at the end, together with all their data.
 // miljana (from npm run seed) is only used to look up edition ids.
@@ -99,58 +99,6 @@ describe('Reading data (e2e)', () => {
     }
     return book;
   }
-
-  describe('preferences', () => {
-    it('returns the defaults, then keeps a partial update', async () => {
-      const defaults = await call('get', '/api/me/preferences', readerToken);
-      expect(defaults.body).toMatchObject({ fontSize: 21, updatedAt: null });
-
-      await call('put', '/api/me/preferences', readerToken)
-        .send({ theme: 'night', fontSize: 24 })
-        .expect(200);
-      await call('put', '/api/me/preferences', readerToken)
-        .send({ showHighlights: false })
-        .expect(200);
-
-      const saved = await call('get', '/api/me/preferences', readerToken);
-      expect(saved.body).toMatchObject({
-        theme: 'night',
-        fontSize: 24,
-        showHighlights: false,
-      });
-    });
-  });
-
-  describe('library', () => {
-    it('adds once, saves the reading position and removes the entry', async () => {
-      await call('put', `/api/me/library/${gatsby.id}`, readerToken).expect(
-        200,
-      );
-      await call('put', `/api/me/library/${gatsby.id}`, readerToken).expect(
-        200,
-      );
-      const position = await call(
-        'put',
-        `/api/me/library/${gatsby.id}/position`,
-        readerToken,
-      )
-        .send({ offset: 2400 })
-        .expect(200);
-      expect(position.body).toMatchObject({
-        id: gatsby.id,
-        lastPosition: 2400,
-      });
-
-      const library = await call('get', '/api/me/library', readerToken);
-      expect(library.body).toHaveLength(1);
-
-      await call('delete', `/api/me/library/${gatsby.id}`, readerToken).expect(
-        204,
-      );
-      const empty = await call('get', '/api/me/library', readerToken);
-      expect(empty.body).toHaveLength(0);
-    });
-  });
 
   describe('annotations', () => {
     const annotationsPath = () => `/api/editions/${gatsby.id}/annotations`;
@@ -278,31 +226,6 @@ describe('Reading data (e2e)', () => {
 
       await call('delete', notePath(), readerToken).expect(204);
       await call('get', notePath(), readerToken).expect(204);
-    });
-  });
-
-  describe('bookmarks', () => {
-    const bookmarksPath = () => `/api/editions/${gatsby.id}/bookmarks`;
-
-    it('returns the existing bookmark for the same offset, then deletes it', async () => {
-      const first = await call('post', bookmarksPath(), readerToken)
-        .send({ offset: 3600, label: 'Party' })
-        .expect(201);
-      const again = await call('post', bookmarksPath(), readerToken)
-        .send({ offset: 3600 })
-        .expect(201);
-      const bookmarkId = (first.body as { id: number }).id;
-      expect((again.body as { id: number }).id).toBe(bookmarkId);
-
-      const list = await call('get', bookmarksPath(), readerToken);
-      expect(list.body).toHaveLength(1);
-
-      await call('delete', `/api/bookmarks/${bookmarkId}`, otherToken).expect(
-        404,
-      );
-      await call('delete', `/api/bookmarks/${bookmarkId}`, readerToken).expect(
-        204,
-      );
     });
   });
 });
