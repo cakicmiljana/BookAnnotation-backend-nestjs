@@ -139,6 +139,9 @@ a choice open:
   search and the analysis endpoints (`GET /editions/:id/search`, `POST /analysis`,
   `POST /analysis/follow-up`) are left for a later version.
 - **No rate limiting.** Login, register and upload are not throttled.
+- **No custom error format.** Errors use NestJS's default body,
+  `{ statusCode, message, error }`. For validation errors `message` is a list of
+  problems instead of one string.
 - **Feature folders.** Code is grouped by feature (`src/modules/<feature>/`), not by
   layer (`controllers/`, `services/`). DTOs, mappers and models stay in shared folders.
 - **Separate `UploadModule`.** `POST /editions` lives in its own module because uploading
