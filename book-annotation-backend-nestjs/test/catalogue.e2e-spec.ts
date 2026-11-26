@@ -59,7 +59,11 @@ describe('Catalogue (e2e)', () => {
     // Find the seeded editions through the API instead of hard-coding ids.
     const books = await getBooks('/api/editions', miljanaToken);
     gatsby = findOrFail(books, (book) => book.title === 'The Great Gatsby');
-    privateDorian = findOrFail(books, (book) => book.uploadedByMe);
+    privateDorian = findOrFail(
+      books,
+      (book) =>
+        book.title === 'The Picture of Dorian Gray' && book.uploadedByMe,
+    );
   });
 
   afterAll(async () => {
@@ -90,11 +94,15 @@ describe('Catalogue (e2e)', () => {
   }
 
   describe('GET /api/editions', () => {
-    it('shows miljana the three catalogue editions plus her private upload', async () => {
+    // miljana may have uploaded more books by hand, so no exact count here.
+    it('shows miljana the catalogue editions plus her private upload', async () => {
+      const catalogue = await getBooks('/api/editions', otherToken);
       const books = await getBooks('/api/editions', miljanaToken);
 
-      expect(books).toHaveLength(4);
-      expect(books.filter((book) => book.uploadedByMe)).toHaveLength(1);
+      const catalogueIds = catalogue.map((book) => book.id);
+      expect(books.map((book) => book.id)).toEqual(
+        expect.arrayContaining([...catalogueIds, privateDorian.id]),
+      );
     });
 
     it("shows another user only the catalogue, never miljana's upload", async () => {
@@ -112,8 +120,8 @@ describe('Catalogue (e2e)', () => {
       );
       const otherBooks = await getBooks('/api/editions?q=WILDE', otherToken);
 
-      expect(miljanaBooks).toHaveLength(2);
       expect(otherBooks).toHaveLength(1);
+      expect(miljanaBooks.map((book) => book.id)).toContain(privateDorian.id);
     });
 
     it('sorts by publication year', async () => {
@@ -175,9 +183,9 @@ describe('Catalogue (e2e)', () => {
 
       const miljanaWork = await get(workPath, miljanaToken).expect(200);
       const otherWork = await get(workPath, otherToken).expect(200);
-      expect((miljanaWork.body as { editionCount: number }).editionCount).toBe(
-        2,
-      );
+      expect(
+        (miljanaWork.body as { editionCount: number }).editionCount,
+      ).toBeGreaterThan(1);
       expect((otherWork.body as { editionCount: number }).editionCount).toBe(1);
 
       const miljanaEditions = await getBooks(
