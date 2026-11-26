@@ -18,7 +18,6 @@ export const toEditionResponse = (
   pages: edition.pages,
   pageSize: edition.pageSize,
   contentLength: edition.contentLength,
-  coverUrl: edition.coverUrl,
   uploadedByMe: edition.uploadedByUserId === currentUserId,
   createdAt: edition.createdAt.toISOString(),
 });
@@ -31,5 +30,4 @@ export const toEditionSummaryResponse = (
   title: edition.work.title,
   author: edition.work.author,
   language: edition.language,
-  coverUrl: edition.coverUrl,
 });

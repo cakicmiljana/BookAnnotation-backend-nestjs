@@ -13,7 +13,6 @@ export class EditionResponse {
   pages: number | null;
   pageSize: number;
   contentLength: number;
-  coverUrl: string | null;
   uploadedByMe: boolean;
   createdAt: string;
 }

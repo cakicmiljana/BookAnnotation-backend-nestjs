@@ -159,6 +159,8 @@ a choice open:
 - **Seed data is defined in code** (`src/database/seeds/seed-data.ts`) with real book
   texts, instead of being read from the frontend's `mock-data.json`.
 - **Messages are written inline** in services and guards instead of as named constants.
+- **No `coverUrl`.** Editions have no cover field. The frontend shows
+  `assets/<workId>.jpg` (and a text cover when that image is missing).
 - **Pinned package versions.** `@nestjs/config` 4.x and `@nestjs/typeorm` 11.x are used
   because the 12.x versions are ESM-only and do not load in Jest. `pdf-parse` is pinned
   to 2.4.5.
@@ -177,8 +179,10 @@ These are not implemented here; the frontend must make them:
 - Add an HTTP interceptor that sends `Authorization: Bearer <token>`, and persist the
   token (for example in `localStorage`) so a page refresh does not log the user out.
 - The `Book` model loses `content` and `deletedAt` and gains `workId`, `isbn`,
-  `contentLength`, `coverUrl` and `uploadedByMe`. The reader loads text from
+  `contentLength` and `uploadedByMe`. The reader loads text from
   `/editions/:id/content`.
+- The cover component loads `assets/<workId>.jpg` instead of `assets/<id>.jpg`, so
+  every edition of a work shows the same cover.
 - `bookId` → `editionId` in the `Annotation` and `Note` models. `Annotation` gains
   `updatedAt` and loses `deletedAt`.
 - The `User` model drops `passwordHash` and `deletedAt` and becomes

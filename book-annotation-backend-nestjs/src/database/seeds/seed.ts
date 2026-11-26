@@ -145,7 +145,6 @@ async function createEdition(
     content,
     contentLength: content.length,
     sourceFormat: seedEdition.sourceFormat,
-    coverUrl: null,
     uploadedByUserId,
   });
   return { ...edition, content };

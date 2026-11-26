@@ -45,7 +45,6 @@ function createGatsby(): Edition {
     content: undefined as unknown as string,
     contentLength: 56674,
     sourceFormat: SourceFormat.Txt,
-    coverUrl: null,
     uploadedByUserId: null,
     uploadedByUser: null,
     createdAt: new Date('2026-01-01T00:00:00.000Z'),

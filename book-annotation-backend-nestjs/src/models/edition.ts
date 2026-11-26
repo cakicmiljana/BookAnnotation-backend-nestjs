@@ -48,9 +48,6 @@ export class Edition {
   @Column({ type: 'enum', enum: SourceFormat, enumName: 'source_format' })
   sourceFormat: SourceFormat;
 
-  @Column({ type: 'varchar', nullable: true })
-  coverUrl: string | null;
-
   @Column({ type: 'int', nullable: true })
   uploadedByUserId: number | null;
 

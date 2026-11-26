@@ -4,5 +4,4 @@ export class EditionSummaryResponse {
   title: string;
   author: string;
   language: string;
-  coverUrl: string | null;
 }
