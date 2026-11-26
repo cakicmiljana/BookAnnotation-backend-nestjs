@@ -116,7 +116,7 @@ describe('EditionsService', () => {
   });
 
   describe('findAllAccessible', () => {
-    it('returns the accessible editions as frontend Books, sorted by title', async () => {
+    it('returns the accessible editions with their work, sorted by title', async () => {
       queryBuilder.getMany.mockResolvedValue([createGatsby()]);
 
       const books = await service.findAllAccessible(7, {
@@ -126,7 +126,7 @@ describe('EditionsService', () => {
       expect(books).toHaveLength(1);
       expect(books[0]).toMatchObject({
         id: 1,
-        title: 'The Great Gatsby',
+        work: { title: 'The Great Gatsby' },
         uploadedByMe: false,
       });
       expect(queryBuilder.orderBy).not.toHaveBeenCalled();
@@ -190,13 +190,15 @@ describe('EditionsService', () => {
   });
 
   describe('findOne', () => {
-    it('returns one accessible edition as a frontend Book', async () => {
+    it('returns one accessible edition with its work', async () => {
       queryBuilder.getOne.mockResolvedValue(createGatsby());
 
       await expect(service.findOne(7, 1)).resolves.toMatchObject({
         id: 1,
-        title: 'The Great Gatsby',
-        author: 'F. Scott Fitzgerald',
+        work: {
+          title: 'The Great Gatsby',
+          author: 'F. Scott Fitzgerald',
+        },
       });
     });
 

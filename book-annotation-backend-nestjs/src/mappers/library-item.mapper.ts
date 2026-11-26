@@ -2,7 +2,7 @@ import { LibraryItemResponse } from '../dtos/library/library-item.response';
 import { LibraryEntry } from '../models/library-entry';
 import { toEditionResponse } from './edition.mapper';
 
-// A frontend Book plus the reading state. The entry must be loaded with its edition and work.
+// An edition plus the reading state. The entry must be loaded with its edition and work.
 export const toLibraryItemResponse = (
   entry: LibraryEntry,
   currentUserId: number,

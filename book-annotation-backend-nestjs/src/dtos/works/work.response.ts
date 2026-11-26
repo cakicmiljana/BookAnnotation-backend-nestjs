@@ -1,4 +1,4 @@
-export class WorkResponse {
+export class WorkSummaryResponse {
   id: number;
   title: string;
   author: string;
@@ -6,6 +6,9 @@ export class WorkResponse {
   country: string | null;
   originalLanguage: string | null;
   publicationYear: number | null;
+}
+
+export class WorkResponse extends WorkSummaryResponse {
   /** Number of editions of this work the current user can access */
   editionCount: number;
 }

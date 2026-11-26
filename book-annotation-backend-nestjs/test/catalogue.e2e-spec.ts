@@ -10,8 +10,7 @@ import { User } from '../src/models/user';
 interface Book {
   id: number;
   workId: number;
-  title: string;
-  publicationYear: number | null;
+  work: { title: string; publicationYear: number | null };
   uploadedByMe: boolean;
   contentLength: number;
 }
@@ -64,11 +63,14 @@ describe('Catalogue (e2e)', () => {
 
     // Find the seeded editions through the API instead of hard-coding ids.
     const books = await getBooks('/api/editions', miljanaToken);
-    gatsby = findOrFail(books, (book) => book.title === 'The Great Gatsby');
+    gatsby = findOrFail(
+      books,
+      (book) => book.work.title === 'The Great Gatsby',
+    );
     privateDorian = findOrFail(
       books,
       (book) =>
-        book.title === 'The Picture of Dorian Gray' && book.uploadedByMe,
+        book.work.title === 'The Picture of Dorian Gray' && book.uploadedByMe,
     );
   });
 
@@ -132,7 +134,7 @@ describe('Catalogue (e2e)', () => {
 
     it('sorts by publication year', async () => {
       const books = await getBooks('/api/editions?sort=year', miljanaToken);
-      const years = books.map((book) => book.publicationYear ?? 0);
+      const years = books.map((book) => book.work.publicationYear ?? 0);
 
       expect(years).toEqual([...years].sort((a, b) => a - b));
     });
@@ -145,7 +147,7 @@ describe('Catalogue (e2e)', () => {
         otherToken,
       ).expect(200);
 
-      expect((response.body as Book).title).toBe('The Great Gatsby');
+      expect((response.body as Book).work.title).toBe('The Great Gatsby');
       expect(response.body).not.toHaveProperty('content');
     });
 

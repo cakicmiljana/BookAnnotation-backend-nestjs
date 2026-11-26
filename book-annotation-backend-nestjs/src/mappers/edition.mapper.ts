@@ -1,6 +1,7 @@
 import { EditionSummaryResponse } from '../dtos/editions/edition-summary.response';
 import { EditionResponse } from '../dtos/editions/edition.response';
 import { Edition } from '../models/edition';
+import { toWorkSummaryResponse } from './work.mapper';
 
 export const toEditionResponse = (
   edition: Edition,
@@ -8,13 +9,8 @@ export const toEditionResponse = (
 ): EditionResponse => ({
   id: edition.id,
   workId: edition.workId,
-  title: edition.work.title,
-  author: edition.work.author,
-  description: edition.work.description,
-  country: edition.work.country,
-  publicationYear: edition.work.publicationYear,
+  work: toWorkSummaryResponse(edition.work),
   language: edition.language,
-  originalLanguage: edition.work.originalLanguage,
   isbn: edition.isbn,
   pages: edition.pages,
   pageSize: edition.pageSize,

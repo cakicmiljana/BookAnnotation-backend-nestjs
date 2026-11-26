@@ -9,7 +9,7 @@ import { User } from '../src/models/user';
 
 interface Book {
   id: number;
-  title: string;
+  work: { title: string };
   uploadedByMe: boolean;
   contentLength: number;
 }
@@ -58,7 +58,10 @@ describe('Reading data (e2e)', () => {
     const miljanaToken = (login.body as { token: string }).token;
     const books = (await call('get', '/api/editions', miljanaToken).expect(200))
       .body as Book[];
-    gatsby = findOrFail(books, (book) => book.title === 'The Great Gatsby');
+    gatsby = findOrFail(
+      books,
+      (book) => book.work.title === 'The Great Gatsby',
+    );
     privateDorian = findOrFail(books, (book) => book.uploadedByMe);
   });
 

@@ -12,8 +12,7 @@ import { Work } from '../src/models/work';
 interface Book {
   id: number;
   workId: number;
-  title: string;
-  author: string;
+  work: { title: string; author: string };
   uploadedByMe: boolean;
   contentLength: number;
 }
@@ -100,7 +99,10 @@ describe('Upload (e2e)', () => {
     }).expect(201);
     const book = response.body as Book;
 
-    expect(book).toMatchObject({ title: workTitle, uploadedByMe: true });
+    expect(book).toMatchObject({
+      work: { title: workTitle },
+      uploadedByMe: true,
+    });
     // Text was normalized: \r\n became \n and the last line break was trimmed.
     expect(book.contentLength).toBe(
       BOOK_TEXT.replace(/\r\n/g, '\n').trimEnd().length,
@@ -119,7 +121,7 @@ describe('Upload (e2e)', () => {
   it('matches an existing work by title + author, ignoring letter case', async () => {
     const first = await get('/api/editions', uploaderToken).expect(200);
     const original = (first.body as Book[]).find(
-      (book) => book.title === workTitle,
+      (book) => book.work.title === workTitle,
     );
 
     const response = await upload('copy.txt', 'text/plain', BOOK_TEXT, {
@@ -134,7 +136,7 @@ describe('Upload (e2e)', () => {
   it('keeps the upload private: another user gets 404 for it', async () => {
     const mine = await get('/api/editions', uploaderToken).expect(200);
     const uploaded = (mine.body as Book[]).find(
-      (book) => book.title === workTitle,
+      (book) => book.work.title === workTitle,
     );
 
     await get(`/api/editions/${uploaded?.id}`, otherToken).expect(404);
