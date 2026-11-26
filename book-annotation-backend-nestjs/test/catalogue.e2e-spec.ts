@@ -16,6 +16,12 @@ interface Book {
   contentLength: number;
 }
 
+interface Work {
+  id: number;
+  title: string;
+  editionCount: number;
+}
+
 // Needs the seed data (npm run seed): three catalogue editions plus miljana's
 // private copy of Dorian Gray. A second, temporary user checks that the private
 // copy stays invisible to everyone else; that user is deleted at the end.
@@ -174,6 +180,39 @@ describe('Catalogue (e2e)', () => {
       await get(`/api/editions/${privateDorian.id}/content`, otherToken).expect(
         404,
       );
+    });
+  });
+
+  describe('GET /api/works', () => {
+    async function getWorks(token: string): Promise<Work[]> {
+      const response = await get('/api/works', token).expect(200);
+      return response.body as Work[];
+    }
+
+    function findWork(works: Work[], workId: number): Work {
+      const work = works.find((item) => item.id === workId);
+      if (!work) {
+        throw new Error(`Work ${workId} is missing from /api/works`);
+      }
+      return work;
+    }
+
+    it('lists every work only once', async () => {
+      const works = await getWorks(miljanaToken);
+      const workIds = works.map((work) => work.id);
+
+      expect(new Set(workIds).size).toBe(workIds.length);
+      expect(workIds).toContain(privateDorian.workId);
+    });
+
+    it('counts only the editions each user can see', async () => {
+      const miljanaWorks = await getWorks(miljanaToken);
+      const otherWorks = await getWorks(otherToken);
+
+      expect(
+        findWork(miljanaWorks, privateDorian.workId).editionCount,
+      ).toBeGreaterThan(1);
+      expect(findWork(otherWorks, privateDorian.workId).editionCount).toBe(1);
     });
   });
 

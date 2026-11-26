@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
+import { EditionQueryDto } from '../../dtos/editions/edition-query.dto';
 import { WorkResponse } from '../../dtos/works/work.response';
 import { toWorkResponse } from '../../mappers/work.mapper';
 import { Work } from '../../models/work';
@@ -13,6 +14,32 @@ export class WorksService {
     private readonly worksRepository: Repository<Work>,
     private readonly editionsService: EditionsService,
   ) {}
+
+  async findAllAccessible(
+    userId: number,
+    query: EditionQueryDto,
+  ): Promise<WorkResponse[]> {
+    const editions = await this.editionsService.findAccessibleEditions(
+      userId,
+      query,
+    );
+
+    const works: Work[] = [];
+    const editionCounts = new Map<number, number>();
+    for (const edition of editions) {
+      const count = editionCounts.get(edition.workId);
+      if (count === undefined) {
+        works.push(edition.work);
+        editionCounts.set(edition.workId, 1);
+      } else {
+        editionCounts.set(edition.workId, count + 1);
+      }
+    }
+
+    return works.map((work) =>
+      toWorkResponse(work, editionCounts.get(work.id) ?? 0),
+    );
+  }
 
   // 404 when the work does not exist, or when the user cannot see any of its
   // editions (e.g. a work that only has another user's private upload).

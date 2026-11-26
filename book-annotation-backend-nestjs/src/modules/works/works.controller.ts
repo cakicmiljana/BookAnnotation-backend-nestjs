@@ -1,7 +1,8 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
+import { EditionQueryDto } from '../../dtos/editions/edition-query.dto';
 import { EditionResponse } from '../../dtos/editions/edition.response';
 import { WorkResponse } from '../../dtos/works/work.response';
 import { EditionsService } from '../editions/editions.service';
@@ -15,6 +16,14 @@ export class WorksController {
     private readonly worksService: WorksService,
     private readonly editionsService: EditionsService,
   ) {}
+
+  @Get()
+  getAll(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query() query: EditionQueryDto,
+  ): Promise<WorkResponse[]> {
+    return this.worksService.findAllAccessible(user.id, query);
+  }
 
   @Get(':workId')
   getOne(

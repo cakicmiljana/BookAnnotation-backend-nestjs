@@ -9,6 +9,7 @@ export class EditionResponse {
   country: string | null;
   publicationYear: number | null;
   language: string;
+  originalLanguage: string | null;
   isbn: string | null;
   pages: number | null;
   pageSize: number;

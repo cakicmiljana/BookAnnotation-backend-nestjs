@@ -14,6 +14,7 @@ export const toEditionResponse = (
   country: edition.work.country,
   publicationYear: edition.work.publicationYear,
   language: edition.language,
+  originalLanguage: edition.work.originalLanguage,
   isbn: edition.isbn,
   pages: edition.pages,
   pageSize: edition.pageSize,

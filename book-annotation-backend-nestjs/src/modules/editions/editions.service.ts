@@ -20,6 +20,14 @@ export class EditionsService {
     userId: number,
     query: EditionQueryDto,
   ): Promise<EditionResponse[]> {
+    const editions = await this.findAccessibleEditions(userId, query);
+    return editions.map((edition) => toEditionResponse(edition, userId));
+  }
+
+  findAccessibleEditions(
+    userId: number,
+    query: EditionQueryDto,
+  ): Promise<Edition[]> {
     const editionsQuery = this.accessibleToUser(userId);
 
     if (query.q) {
@@ -30,8 +38,7 @@ export class EditionsService {
     }
     this.applySort(editionsQuery, query.sort);
 
-    const editions = await editionsQuery.getMany();
-    return editions.map((edition) => toEditionResponse(edition, userId));
+    return editionsQuery.getMany();
   }
 
   async findOne(userId: number, editionId: number): Promise<EditionResponse> {
