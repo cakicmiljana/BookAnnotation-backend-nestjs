@@ -25,11 +25,8 @@ docker compose -f ../../docker-compose.yml up -d postgres
 
 ### 2. Configure the environment
 
-```bash
-cp .env.example .env
-```
+Create a `.env` file in the project folder with the variables below, for example:
 
-Then set `JWT_SECRET` in `.env` to a long random value (at least 32 characters).
 `.env` is git-ignored; never commit it.
 
 | Variable | Default | Meaning |

@@ -37,7 +37,7 @@ type SeededEdition = Edition & { content: string };
 async function seed(): Promise<void> {
   const password = process.env.SEED_USER_PASSWORD;
   if (!password) {
-    throw new Error('SEED_USER_PASSWORD is not set (see .env.example)');
+    throw new Error('SEED_USER_PASSWORD is not set (see README)');
   }
 
   await dataSource.initialize();
