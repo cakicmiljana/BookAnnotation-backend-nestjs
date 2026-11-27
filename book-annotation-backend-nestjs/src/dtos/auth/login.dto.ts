@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class LoginDto {
-  /** Username or email, case-insensitive */
+  // username or email, case insensitive
   @IsString()
   @IsNotEmpty()
   username: string;

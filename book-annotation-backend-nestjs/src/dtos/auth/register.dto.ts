@@ -9,7 +9,7 @@ export class RegisterDto extends UpdateProfileDto {
   @MaxLength(254)
   email: string;
 
-  /** 8–72 characters (bcrypt ignores input beyond 72 bytes) */
+  // 8–72 characters (bcrypt ignores input beyond 72 bytes)
   @IsString()
   @Length(8, 72)
   password: string;

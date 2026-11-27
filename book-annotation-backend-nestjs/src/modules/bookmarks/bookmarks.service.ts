@@ -60,7 +60,6 @@ export class BookmarksService {
       userId,
       editionId,
       offset: dto.offset,
-      label: dto.label ?? null,
     });
     const saved = await this.bookmarksRepository.save(bookmark);
     return toBookmarkResponse(saved);

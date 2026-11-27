@@ -30,9 +30,6 @@ export class Bookmark {
   @Column({ type: 'int' })
   offset: number;
 
-  @Column({ type: 'varchar', length: 120, nullable: true })
-  label: string | null;
-
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 }

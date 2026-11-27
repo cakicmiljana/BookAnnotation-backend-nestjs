@@ -51,13 +51,12 @@ describe('BookmarksService', () => {
         userId: 7,
         editionId: 1,
         offset: 3000,
-        label: 'Chapter II',
         createdAt: new Date('2026-11-20T09:00:00.000Z'),
       });
 
       const result = await service.create(7, 1, { offset: 3000 });
 
-      expect(result).toMatchObject({ id: 1, label: 'Chapter II' });
+      expect(result).toMatchObject({ id: 1, offset: 3000 });
       expect(bookmarksRepository.save).not.toHaveBeenCalled();
     });
 
@@ -66,7 +65,7 @@ describe('BookmarksService', () => {
 
       const result = await service.create(7, 1, { offset: 3000 });
 
-      expect(result).toMatchObject({ id: 2, offset: 3000, label: null });
+      expect(result).toMatchObject({ id: 2, offset: 3000 });
       expect(bookmarksRepository.save).toHaveBeenCalled();
     });
   });

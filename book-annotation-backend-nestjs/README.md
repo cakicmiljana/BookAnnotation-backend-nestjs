@@ -158,6 +158,8 @@ a choice open:
 - **Messages are written inline** in services and guards instead of as named constants.
 - **No `coverUrl`.** Editions have no cover field. The frontend shows
   `assets/<workId>.jpg` (and a text cover when that image is missing).
+- **Bookmarks have no `label`.** A bookmark is only a reading location (`offset`);
+  `POST /editions/:editionId/bookmarks` takes `{ offset }`.
 - **Pinned package versions.** `@nestjs/config` 4.x and `@nestjs/typeorm` 11.x are used
   because the 12.x versions are ESM-only and do not load in Jest. `pdf-parse` is pinned
   to 2.4.5.
@@ -180,6 +182,7 @@ These are not implemented here; the frontend must make them:
   `/editions/:id/content`.
 - The cover component loads `assets/<workId>.jpg` instead of `assets/<id>.jpg`, so
   every edition of a work shows the same cover.
+- The `Bookmark` model drops `label` and becomes `{ id, editionId, offset, createdAt }`.
 - `bookId` → `editionId` in the `Annotation` and `Note` models. `Annotation` gains
   `updatedAt` and loses `deletedAt`.
 - The `User` model drops `passwordHash` and `deletedAt` and becomes

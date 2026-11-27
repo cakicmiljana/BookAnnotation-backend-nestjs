@@ -207,7 +207,6 @@ async function replacePersonalData(
         userId,
         editionId: edition.id,
         offset: pageStart(edition, bookmark.page),
-        label: bookmark.label,
         createdAt: new Date(bookmark.createdAt),
       };
     }),

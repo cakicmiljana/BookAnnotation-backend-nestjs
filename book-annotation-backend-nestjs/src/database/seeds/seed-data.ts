@@ -60,7 +60,6 @@ export interface SeedBookmark {
   edition: EditionKey;
   /** Reading location (page index); stored as page * pageSize */
   page: number;
-  label: string | null;
   createdAt: string;
 }
 
@@ -315,19 +314,16 @@ export const SEED_BOOKMARKS: SeedBookmark[] = [
   {
     edition: 'gatsby',
     page: 0,
-    label: 'Opening',
     createdAt: '2026-02-01T11:00:00Z',
   },
   {
     edition: 'gatsby',
     page: 7,
-    label: null,
     createdAt: '2026-11-14T20:15:00Z',
   },
   {
     edition: 'crime',
     page: 15,
-    label: 'Marmeladov',
     createdAt: '2026-11-10T19:00:00Z',
   },
 ];
