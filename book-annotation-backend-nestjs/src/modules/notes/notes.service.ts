@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { escapeLikePattern } from '../../common/utils/escape-like-pattern';
-import { NotebookSearchQueryDto } from '../../dtos/common/notebook-search-query.dto';
-import { NotebookNoteResponse } from '../../dtos/notes/notebook-note.response';
-import { NoteResponse } from '../../dtos/notes/note.response';
+import { NotebookSearchQueryDto } from '../../dtos/notebook/notebook-search-query.dto';
+import { GetNotebookNotesResponse } from '../../dtos/notes/get-notebook-notes.response';
+import { GetNoteResponse } from '../../dtos/notes/get-note.response';
 import { UpsertNoteDto } from '../../dtos/notes/upsert-note.dto';
 import {
   toNotebookNoteResponse,
@@ -21,7 +21,7 @@ export class NotesService {
     private readonly editionsService: EditionsService,
   ) {}
 
-  async findNote(userId: number, editionId: number): Promise<NoteResponse | null> {
+  async findNote(userId: number, editionId: number): Promise<GetNoteResponse | null> {
     await this.editionsService.findAccessibleEdition(editionId, userId);
 
     const note = await this.notesRepository.findOneBy({ userId, editionId });
@@ -34,7 +34,7 @@ export class NotesService {
     userId: number,
     editionId: number,
     dto: UpsertNoteDto,
-  ): Promise<NoteResponse> {
+  ): Promise<GetNoteResponse> {
     await this.editionsService.findAccessibleEdition(editionId, userId);
 
     const existing = await this.notesRepository.findOneBy({
@@ -58,7 +58,7 @@ export class NotesService {
   async findForNotebook(
     userId: number,
     query: NotebookSearchQueryDto,
-  ): Promise<NotebookNoteResponse[]> {
+  ): Promise<GetNotebookNotesResponse[]> {
     const notesQuery = this.notesRepository
       .createQueryBuilder('note')
       .innerJoinAndSelect('note.edition', 'edition')

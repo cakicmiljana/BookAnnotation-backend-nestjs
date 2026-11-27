@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { LibraryItemResponse } from '../../dtos/library/library-item.response';
+import { GetLibraryItemResponse } from '../../dtos/library/get-library-item.response';
 import { toLibraryItemResponse } from '../../mappers/library-item.mapper';
 import { Edition } from '../../models/edition';
 import { LibraryEntry } from '../../models/library-entry';
@@ -16,7 +16,7 @@ export class LibraryService {
   ) {}
 
   // The first item is the one shown "On your reading desk".
-  async findAll(userId: number): Promise<LibraryItemResponse[]> {
+  async findAll(userId: number): Promise<GetLibraryItemResponse[]> {
     const entries = await this.libraryRepository
       .createQueryBuilder('entry')
       .innerJoinAndSelect('entry.edition', 'edition')
@@ -30,7 +30,7 @@ export class LibraryService {
   }
 
   // Adding an edition that is already in the library returns the existing entry.
-  async add(userId: number, editionId: number): Promise<LibraryItemResponse> {
+  async add(userId: number, editionId: number): Promise<GetLibraryItemResponse> {
     const edition = await this.editionsService.findAccessibleEdition(
       editionId,
       userId,
@@ -52,7 +52,7 @@ export class LibraryService {
     userId: number,
     editionId: number,
     offset: number,
-  ): Promise<LibraryItemResponse> {
+  ): Promise<GetLibraryItemResponse> {
     const edition = await this.editionsService.findAccessibleEdition(
       editionId,
       userId,

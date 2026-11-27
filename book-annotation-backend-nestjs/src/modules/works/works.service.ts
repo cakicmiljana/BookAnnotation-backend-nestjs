@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { GetEditionQueryDto } from '../../dtos/editions/get-edition-query.dto';
-import { WorkResponse } from '../../dtos/works/work.response';
+import { GetWorkResponse } from '../../dtos/works/get-work.response';
 import { toWorkResponse } from '../../mappers/work.mapper';
 import { Work } from '../../models/work';
 import { EditionsService } from '../editions/editions.service';
@@ -18,7 +18,7 @@ export class WorksService {
   async findAllAccessible(
     userId: number,
     query: GetEditionQueryDto,
-  ): Promise<WorkResponse[]> {
+  ): Promise<GetWorkResponse[]> {
     const editions = await this.editionsService.findAccessibleEditions(
       userId,
       query,
@@ -43,7 +43,7 @@ export class WorksService {
 
   // 404 when the work does not exist, or when the user cannot see any of its
   // editions (e.g. a work that only has another user's private upload).
-  async findOne(userId: number, workId: number): Promise<WorkResponse> {
+  async findOne(userId: number, workId: number): Promise<GetWorkResponse> {
     const work = await this.worksRepository.findOneBy({ id: workId });
     if (!work) {
       throw new NotFoundException(`Work ${workId} was not found`);

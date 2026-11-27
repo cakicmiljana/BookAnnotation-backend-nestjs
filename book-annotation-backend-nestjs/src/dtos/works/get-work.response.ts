@@ -8,7 +8,7 @@ export class WorkSummaryResponse {
   publicationYear: number | null;
 }
 
-export class WorkResponse extends WorkSummaryResponse {
-  /** Number of editions of this work the current user can access */
+export class GetWorkResponse extends WorkSummaryResponse {
+  // Number of editions of this work the current user can access
   editionCount: number;
 }

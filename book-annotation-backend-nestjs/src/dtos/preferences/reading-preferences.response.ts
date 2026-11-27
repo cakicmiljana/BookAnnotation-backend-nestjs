@@ -9,6 +9,6 @@ export class ReadingPreferencesResponse {
   readingWidth: ReadingWidth;
   theme: Theme;
   showHighlights: boolean;
-  /** `null` when the user has not saved preferences yet (defaults are returned) */
+  // null when the user has not saved preferences yet (defaults are returned)
   updatedAt: string | null;
 }

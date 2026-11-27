@@ -4,7 +4,7 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
 import { GetEditionQueryDto } from '../../dtos/editions/get-edition-query.dto';
 import { EditionResponse } from '../../dtos/editions/edition.response';
-import { WorkResponse } from '../../dtos/works/work.response';
+import { GetWorkResponse } from '../../dtos/works/get-work.response';
 import { EditionsService } from '../editions/editions.service';
 import { WorksService } from './works.service';
 
@@ -21,7 +21,7 @@ export class WorksController {
   getAll(
     @CurrentUser() user: AuthenticatedUser,
     @Query() query: GetEditionQueryDto,
-  ): Promise<WorkResponse[]> {
+  ): Promise<GetWorkResponse[]> {
     return this.worksService.findAllAccessible(user.id, query);
   }
 
@@ -29,7 +29,7 @@ export class WorksController {
   getOne(
     @CurrentUser() user: AuthenticatedUser,
     @Param('workId', ParseIntPipe) workId: number,
-  ): Promise<WorkResponse> {
+  ): Promise<GetWorkResponse> {
     return this.worksService.findOne(user.id, workId);
   }
 

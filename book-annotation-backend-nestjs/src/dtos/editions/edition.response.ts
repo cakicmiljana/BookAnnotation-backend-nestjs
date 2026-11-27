@@ -1,4 +1,4 @@
-import { WorkSummaryResponse } from '../works/work.response';
+import { WorkSummaryResponse } from '../works/get-work.response';
 
 export class EditionResponse {
   id: number;

@@ -20,9 +20,9 @@ import {
 import type { Response } from 'express';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
-import { NotebookSearchQueryDto } from '../../dtos/common/notebook-search-query.dto';
-import { NotebookNoteResponse } from '../../dtos/notes/notebook-note.response';
-import { NoteResponse } from '../../dtos/notes/note.response';
+import { NotebookSearchQueryDto } from '../../dtos/notebook/notebook-search-query.dto';
+import { GetNotebookNotesResponse } from '../../dtos/notes/get-notebook-notes.response';
+import { GetNoteResponse } from '../../dtos/notes/get-note.response';
 import { UpsertNoteDto } from '../../dtos/notes/upsert-note.dto';
 import { NotesService } from './notes.service';
 
@@ -32,7 +32,7 @@ import { NotesService } from './notes.service';
 export class NotesController {
   constructor(private readonly notesService: NotesService) {}
 
-  @ApiOkResponse({ type: NoteResponse })
+  @ApiOkResponse({ type: GetNoteResponse })
   @ApiNoContentResponse({
     description: 'The user has no note for this edition yet',
   })
@@ -41,7 +41,7 @@ export class NotesController {
     @CurrentUser() user: AuthenticatedUser,
     @Param('editionId', ParseIntPipe) editionId: number,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<NoteResponse | undefined> {
+  ): Promise<GetNoteResponse | undefined> {
     const note = await this.notesService.findNote(user.id, editionId);
     if (!note) {
       response.status(HttpStatus.NO_CONTENT);
@@ -55,7 +55,7 @@ export class NotesController {
     @CurrentUser() user: AuthenticatedUser,
     @Param('editionId', ParseIntPipe) editionId: number,
     @Body() dto: UpsertNoteDto,
-  ): Promise<NoteResponse> {
+  ): Promise<GetNoteResponse> {
     return this.notesService.upsert(user.id, editionId, dto);
   }
 
@@ -73,7 +73,7 @@ export class NotesController {
   findForNotebook(
     @CurrentUser() user: AuthenticatedUser,
     @Query() query: NotebookSearchQueryDto,
-  ): Promise<NotebookNoteResponse[]> {
+  ): Promise<GetNotebookNotesResponse[]> {
     return this.notesService.findForNotebook(user.id, query);
   }
 }

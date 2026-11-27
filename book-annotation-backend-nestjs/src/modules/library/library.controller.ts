@@ -12,7 +12,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
-import { LibraryItemResponse } from '../../dtos/library/library-item.response';
+import { GetLibraryItemResponse } from '../../dtos/library/get-library-item.response';
 import { UpdateReadingPositionDto } from '../../dtos/library/update-reading-position.dto';
 import { LibraryService } from './library.service';
 
@@ -26,7 +26,7 @@ export class LibraryController {
   @Get()
   findAll(
     @CurrentUser() user: AuthenticatedUser,
-  ): Promise<LibraryItemResponse[]> {
+  ): Promise<GetLibraryItemResponse[]> {
     return this.libraryService.findAll(user.id);
   }
 
@@ -34,7 +34,7 @@ export class LibraryController {
   add(
     @CurrentUser() user: AuthenticatedUser,
     @Param('editionId', ParseIntPipe) editionId: number,
-  ): Promise<LibraryItemResponse> {
+  ): Promise<GetLibraryItemResponse> {
     return this.libraryService.add(user.id, editionId);
   }
 
@@ -53,7 +53,7 @@ export class LibraryController {
     @CurrentUser() user: AuthenticatedUser,
     @Param('editionId', ParseIntPipe) editionId: number,
     @Body() dto: UpdateReadingPositionDto,
-  ): Promise<LibraryItemResponse> {
+  ): Promise<GetLibraryItemResponse> {
     return this.libraryService.updatePosition(user.id, editionId, dto.offset);
   }
 }

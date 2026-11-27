@@ -1,4 +1,4 @@
-import { WorkResponse, WorkSummaryResponse } from '../dtos/works/work.response';
+import { GetWorkResponse, WorkSummaryResponse } from '../dtos/works/get-work.response';
 import { Work } from '../models/work';
 
 export const toWorkSummaryResponse = (work: Work): WorkSummaryResponse => ({
@@ -14,7 +14,7 @@ export const toWorkSummaryResponse = (work: Work): WorkSummaryResponse => ({
 export const toWorkResponse = (
   work: Work,
   editionCount: number,
-): WorkResponse => ({
+): GetWorkResponse => ({
   ...toWorkSummaryResponse(work),
   editionCount,
 });

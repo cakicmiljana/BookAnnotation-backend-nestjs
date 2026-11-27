@@ -1,4 +1,4 @@
-export class NoteResponse {
+export class GetNoteResponse {
   id: number;
   editionId: number;
   userId: number;
