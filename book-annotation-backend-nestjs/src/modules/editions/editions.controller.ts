@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
 import { EditionContentResponse } from '../../dtos/editions/edition-content.response';
-import { EditionQueryDto } from '../../dtos/editions/edition-query.dto';
+import { GetEditionQueryDto } from '../../dtos/editions/get-edition-query.dto';
 import { EditionResponse } from '../../dtos/editions/edition.response';
 import { EditionsService } from './editions.service';
 
@@ -17,7 +17,7 @@ export class EditionsController {
   @Get()
   getAll(
     @CurrentUser() user: AuthenticatedUser,
-    @Query() query: EditionQueryDto,
+    @Query() query: GetEditionQueryDto,
   ): Promise<EditionResponse[]> {
     return this.editionsService.findAllAccessible(user.id, query);
   }

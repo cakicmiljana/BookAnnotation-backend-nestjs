@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { EditionQueryDto } from '../../dtos/editions/edition-query.dto';
+import { GetEditionQueryDto } from '../../dtos/editions/get-edition-query.dto';
 import { WorkResponse } from '../../dtos/works/work.response';
 import { toWorkResponse } from '../../mappers/work.mapper';
 import { Work } from '../../models/work';
@@ -17,7 +17,7 @@ export class WorksService {
 
   async findAllAccessible(
     userId: number,
-    query: EditionQueryDto,
+    query: GetEditionQueryDto,
   ): Promise<WorkResponse[]> {
     const editions = await this.editionsService.findAccessibleEditions(
       userId,

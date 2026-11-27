@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { EditionSort } from '../../dtos/editions/edition-sort.enum';
+import { EditionSort } from '../../models/enums/edition-sort.enum';
 import { Edition } from '../../models/edition';
 import { SourceFormat } from '../../models/enums/source-format.enum';
 import { EditionsService } from './editions.service';

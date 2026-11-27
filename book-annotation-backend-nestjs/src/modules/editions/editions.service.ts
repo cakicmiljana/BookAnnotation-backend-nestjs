@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { escapeLikePattern } from '../../common/utils/escape-like-pattern';
 import { EditionContentResponse } from '../../dtos/editions/edition-content.response';
-import { EditionQueryDto } from '../../dtos/editions/edition-query.dto';
-import { EditionSort } from '../../dtos/editions/edition-sort.enum';
+import { GetEditionQueryDto } from '../../dtos/editions/get-edition-query.dto';
+import { EditionSort } from '../../models/enums/edition-sort.enum';
 import { EditionResponse } from '../../dtos/editions/edition.response';
 import { toEditionResponse } from '../../mappers/edition.mapper';
 import { Edition } from '../../models/edition';
@@ -18,7 +18,7 @@ export class EditionsService {
 
   async findAllAccessible(
     userId: number,
-    query: EditionQueryDto,
+    query: GetEditionQueryDto,
   ): Promise<EditionResponse[]> {
     const editions = await this.findAccessibleEditions(userId, query);
     return editions.map((edition) => toEditionResponse(edition, userId));
@@ -26,7 +26,7 @@ export class EditionsService {
 
   findAccessibleEditions(
     userId: number,
-    query: EditionQueryDto,
+    query: GetEditionQueryDto,
   ): Promise<Edition[]> {
     const editionsQuery = this.accessibleToUser(userId);
 

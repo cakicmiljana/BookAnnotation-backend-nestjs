@@ -17,14 +17,14 @@ const hasNoWorkId = (dto: UploadEditionDto): boolean =>
 
 /** Text fields of the multipart upload; the file itself is sent as `file`. */
 export class UploadEditionDto {
-  /** Set when uploading from a book's details page */
+  // Set when uploading from a book's details page
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
   workId?: number;
 
-  /** Required when `workId` is absent */
+  // Required when workId is absent
   @ValidateIf(hasNoWorkId)
   @Transform(trim)
   @IsString()
@@ -32,7 +32,7 @@ export class UploadEditionDto {
   @MaxLength(300)
   title?: string;
 
-  /** Required when `workId` is absent */
+  // Required when `workId` is absent
   @ValidateIf(hasNoWorkId)
   @Transform(trim)
   @IsString()
@@ -46,7 +46,6 @@ export class UploadEditionDto {
   @MaxLength(60)
   language: string;
 
-  /** ISBN-10 or ISBN-13; hyphens allowed */
   @IsOptional()
   @Transform(trim)
   @IsISBN()
