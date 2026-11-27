@@ -12,7 +12,6 @@ export const toNoteResponse = (note: Note): NoteResponse => ({
   updatedAt: note.updatedAt.toISOString(),
 });
 
-// The note must be loaded with its edition and work.
 export const toNotebookNoteResponse = (note: Note): NotebookNoteResponse => ({
   ...toNoteResponse(note),
   edition: toEditionSummaryResponse(note.edition),

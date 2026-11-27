@@ -14,10 +14,10 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../common/types/authenticated-user';
-import { AnnotationQueryDto } from '../../dtos/annotations/annotation-query.dto';
+import { GetAnnotationsQueryDto } from '../../dtos/annotations/get-annotations-query.dto';
 import { AnnotationResponse } from '../../dtos/annotations/annotation.response';
 import { CreateAnnotationDto } from '../../dtos/annotations/create-annotation.dto';
-import { NotebookAnnotationQueryDto } from '../../dtos/annotations/notebook-annotation-query.dto';
+import { GetNotebookAnnotationsQueryDto } from '../../dtos/annotations/get-notebook-annotations-query.dto';
 import { NotebookAnnotationResponse } from '../../dtos/annotations/notebook-annotation.response';
 import { UpdateAnnotationDto } from '../../dtos/annotations/update-annotation.dto';
 import { AnnotationsService } from './annotations.service';
@@ -32,7 +32,7 @@ export class AnnotationsController {
   getAllForEdition(
     @CurrentUser() user: AuthenticatedUser,
     @Param('editionId', ParseIntPipe) editionId: number,
-    @Query() query: AnnotationQueryDto,
+    @Query() query: GetAnnotationsQueryDto,
   ): Promise<AnnotationResponse[]> {
     return this.annotationsService.findForEdition(user.id, editionId, query);
   }
@@ -68,7 +68,7 @@ export class AnnotationsController {
   @Get('me/annotations')
   findForNotebook(
     @CurrentUser() user: AuthenticatedUser,
-    @Query() query: NotebookAnnotationQueryDto,
+    @Query() query: GetNotebookAnnotationsQueryDto,
   ): Promise<NotebookAnnotationResponse[]> {
     return this.annotationsService.findForNotebook(user.id, query);
   }

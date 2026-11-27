@@ -18,7 +18,6 @@ export const toAnnotationResponse = (
   updatedAt: annotation.updatedAt.toISOString(),
 });
 
-// The annotation must be loaded with its edition and work.
 export const toNotebookAnnotationResponse = (
   annotation: Annotation,
   excerpt: string,

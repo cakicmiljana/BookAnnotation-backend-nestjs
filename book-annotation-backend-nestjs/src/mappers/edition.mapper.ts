@@ -19,7 +19,6 @@ export const toEditionResponse = (
   createdAt: edition.createdAt.toISOString(),
 });
 
-// The short edition reference inside Notebook items (annotations and notes).
 export const toEditionSummaryResponse = (
   edition: Edition,
 ): EditionSummaryResponse => ({

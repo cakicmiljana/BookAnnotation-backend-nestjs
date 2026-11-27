@@ -6,10 +6,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { escapeLikePattern } from '../../common/utils/escape-like-pattern';
-import { AnnotationQueryDto } from '../../dtos/annotations/annotation-query.dto';
+import { GetAnnotationsQueryDto } from '../../dtos/annotations/get-annotations-query.dto';
 import { AnnotationResponse } from '../../dtos/annotations/annotation.response';
 import { CreateAnnotationDto } from '../../dtos/annotations/create-annotation.dto';
-import { NotebookAnnotationQueryDto } from '../../dtos/annotations/notebook-annotation-query.dto';
+import { GetNotebookAnnotationsQueryDto } from '../../dtos/annotations/get-notebook-annotations-query.dto';
 import { NotebookAnnotationResponse } from '../../dtos/annotations/notebook-annotation.response';
 import { UpdateAnnotationDto } from '../../dtos/annotations/update-annotation.dto';
 import {
@@ -33,7 +33,7 @@ export class AnnotationsService {
   async findForEdition(
     userId: number,
     editionId: number,
-    query: AnnotationQueryDto,
+    query: GetAnnotationsQueryDto,
   ): Promise<AnnotationResponse[]> {
     await this.editionsService.findAccessibleEdition(editionId, userId);
 
@@ -93,7 +93,7 @@ export class AnnotationsService {
 
   // Notebook: all the user's annotations across every book.
   // `q` searches the comment and the book's title and author.
-  async findForNotebook(userId: number, query: NotebookAnnotationQueryDto
+  async findForNotebook(userId: number, query: GetNotebookAnnotationsQueryDto
   ): Promise<NotebookAnnotationResponse[]> {
     const annotationsQuery = this.annotationsRepository
       .createQueryBuilder('annotation')
